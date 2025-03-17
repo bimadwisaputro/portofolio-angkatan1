@@ -9,10 +9,17 @@ foreach ($rowtablearr as $rowtable) {
     // var_dump($rowtable);
     // die();
     $query_condition = "";
+    $field_condition = "";
     if ($rowtable['table_name'] == 'projects') {
-        $query_condition = "order by id asc limit 6";
+        $query_condition = "order by id desc limit 6"; //last 6 updated rows 
+        $field_condition = "";
     }
-    $get['' . $rowtable['table_name'] . ''] = mysqli_query($conn, "SELECT * from " . $rowtable['table_name'] . " WHERE status='1' " . $query_condition . "");
+
+    if ($rowtable['table_name'] == 'blogs') {
+        $query_condition = ""; //last 6 updated rows 
+        $field_condition = " ,mid(description,91,200) as descfront ";
+    }
+    $get['' . $rowtable['table_name'] . ''] = mysqli_query($conn, "SELECT * " . $field_condition . " from " . $rowtable['table_name'] . " WHERE status='1' " . $query_condition . "");
     $num['' . $rowtable['table_name'] . ''] = mysqli_num_rows($get['' . $rowtable['table_name'] . '']);
     $rows['' . $rowtable['table_name'] . ''] = mysqli_fetch_all($get['' . $rowtable['table_name'] . ''], MYSQLI_ASSOC);
 }
@@ -352,71 +359,9 @@ foreach ($rowtablearr as $rowtable) {
                     $n++;
                 } ?>
 
-                <!-- 
-                        <div class="col-md-4">
-                    <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][3]['foto']); ?>);">
-                        <div class="overlay"></div>
-                        <div class="text text-center p-4">
-                            <h3><a href="#"><?= $rows['projects'][3]['name']; ?></a></h3>
-                            <span><?= $rows['projects'][3]['categories']; ?></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][4]['foto']); ?>);">
-                        <div class="overlay"></div>
-                        <div class="text text-center p-4">
-                            <h3><a href="#"><?= $rows['projects'][4]['name']; ?></a></h3>
-                            <span><?= $rows['projects'][4]['categories']; ?></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][0]['foto']); ?>);">
-                        <div class="overlay"></div>
-                        <div class="text text-center p-4">
-                            <h3><a href="#"><?= $rows['projects'][0]['name']; ?></a></h3>
-                            <span><?= $rows['projects'][0]['categories']; ?></span>
-                        </div>
-                    </div>
-
-                    <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][5]['foto']); ?>);">
-                        <div class="overlay"></div>
-                        <div class="text text-center p-4">
-                            <h3><a href="#"><?= $rows['projects'][5]['name']; ?></a></h3>
-                            <span><?= $rows['projects'][5]['categories']; ?></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][1]['foto']); ?>);">
-                                <div class="overlay"></div>
-                                <div class="text text-center p-4">
-                                    <h3><a href="#"><?= $rows['projects'][1]['name']; ?></a></h3>
-                                    <span><?= $rows['projects'][1]['categories']; ?></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][2]['foto']); ?>);">
-                                <div class="overlay"></div>
-                                <div class="text text-center p-4">
-                                    <h3><a href="#"><?= $rows['projects'][2]['name']; ?></a></h3>
-                                    <span><?= $rows['projects'][2]['categories']; ?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                    -->
             </div>
         </div>
     </section>
-
 
     <section class="ftco-section" id="blog-section">
         <div class="container">
@@ -444,7 +389,7 @@ foreach ($rowtablearr as $rowtable) {
                                     </p>
                                 </div>
                                 <h3 class="heading"><a href="single.php?blogs=<?= base64_encode($rowsblogs['id']); ?>"><?= $rowsblogs['title']; ?></a></h3>
-                                <p><?= $rowsblogs['description']; ?></p>
+                                <p><?= $rowsblogs['subtitle']; ?></p>
                             </div>
                         </div>
                     </div>

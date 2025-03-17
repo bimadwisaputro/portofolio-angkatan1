@@ -239,8 +239,10 @@ $(document).on("click", "[id^=simpan_]", function (e) {
     dataMap["" + idx + ""] = "" + value + "";
     formData.append("" + idx + "", "" + value + "");
   });
-  // console.log(dataMap["categories"]);
-  // return false;
+
+  if (tipe == "blogs") {
+    formData.append("description", tinyMCE.get("description").getContent());
+  }
 
   if (tipe == "contacts") {
     var links = "php/simpan.php";

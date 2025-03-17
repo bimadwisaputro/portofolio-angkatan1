@@ -303,9 +303,10 @@ if (isset($_POST)) {
 
     if ($_POST['tipe'] == 'blogs') {
         $tid = $_POST['tid'];
-        // $categories_id = $_POST['categories_id'];
-        $title = $_POST['title'];
-        $description = $_POST['description'];
+        // $categories_id = $_POST['categories_id']; 
+        $title =  mysqli_escape_string($conn, $_POST['title']);
+        $subtitle =  mysqli_escape_string($conn, $_POST['subtitle']);
+        $description =  mysqli_escape_string($conn, $_POST['description']);
         $writer = $_POST['writer'];
         $tags = $_POST['tags'];
         $status = $_POST['status'];
@@ -339,9 +340,9 @@ if (isset($_POST)) {
 
         if ($mode == 'Add') {
             $runsql = mysqli_query($conn, "INSERT INTO blogs 
-                                                        ( `title`, `description`, `writer`, `foto`, `tags`, `status`, `created_id`)
+                                                        ( `title`,subtitle, `description`, `writer`, `foto`, `tags`, `status`, `created_id`)
                                                         VALUES
-                                                        ( '$title','$description','$writer','$foto','$tags','$status','" . $_SESSION['userid'] . "')                                    
+                                                        ( '$title','$subtitle','$description','$writer','$foto','$tags','$status','" . $_SESSION['userid'] . "')                                    
                                     ");
             $last_id = $conn->insert_id;
         }
@@ -350,6 +351,7 @@ if (isset($_POST)) {
                                     UPDATE blogs 
                                     SET  
                                     title = '" . $title . "',
+                                    subtitle = '" . $subtitle . "',
                                     description = '" . $description . "',
                                     writer = '" . $writer . "', 
                                     tags = '" . $tags . "',

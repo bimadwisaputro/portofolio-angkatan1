@@ -1,7 +1,7 @@
 <?php
 include('include/header.php');
 include('include/sidebar.php');
-$getdata = mysqli_query($conn, "SELECT * from contacts ");
+$getdata = mysqli_query($conn, "SELECT * from contacts order by id desc");
 $numdata = mysqli_num_rows($getdata);
 
 ?>

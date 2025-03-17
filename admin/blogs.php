@@ -3,7 +3,7 @@ include('include/header.php');
 include('include/sidebar.php');
 $getdata = mysqli_query($conn, "SELECT  a.* ,case a.status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case a.status when '1' then 'success' else 'danger' end as statuscolor
-                                         from blogs a   ");
+                                         from blogs a  order by a.id desc ");
 $numdata = mysqli_num_rows($getdata);
 ?>
 <main id="main" class="main">
@@ -16,20 +16,22 @@ $numdata = mysqli_num_rows($getdata);
             </ol>
         </nav>
     </div><!-- End Page Title -->
-
     <section class="section dashboard">
-        <div class="row">
-            <div class="col-12">
-                <div class="card top-selling overflow-auto effectup">
-                    <div class="card-body pb-0">
-                        <?php if (!isset($_GET['form'])) { ?>
-                            <a class="btn btn-success mt-3 mb-3 float-right pull-right" href="blogs.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+        <?php if (!isset($_GET['form'])) { ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card top-selling overflow-auto effectup">
+                        <div class="card-body pb-0">
+
+                            <div align="right" class="mt-2">
+                                <a class="btn btn-success mt-3 mb-3" href="blogs.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+                            </div>
                             <table class="table table-striped table-bordered datatable mt-3">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Title</th>
-                                        <th>Description</th>
+                                        <th>Sub Title</th>
                                         <th>Writer</th>
                                         <th>Tags</th>
                                         <th>Category</th>
@@ -46,7 +48,7 @@ $numdata = mysqli_num_rows($getdata);
                                             <tr>
                                                 <td><?= $i++; ?></td>
                                                 <td><?= $rows['title']; ?></td>
-                                                <td><?= $rows['description']; ?></td>
+                                                <td><?= $rows['subtitle']; ?></td>
                                                 <td><?= $rows['writer']; ?></td>
                                                 <td>
                                                     <?php $res =  explode(',', $rows['tags']);
@@ -79,7 +81,7 @@ $numdata = mysqli_num_rows($getdata);
                                                 <td class="text-center">
                                                     <span class="badge bg-<?= $rows['statuscolor']; ?>"><?= $rows['statuslabel']; ?></span>
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="text-center" style="width:5%;">
                                                     <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="blogs"><i class="bi bi-trash"></i></a>
                                                     <a href="blogs.php?form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
                                                 </td>
@@ -94,27 +96,30 @@ $numdata = mysqli_num_rows($getdata);
                                 </tbody>
                             </table>
 
-                        <?php } else {
+                        </div>
+                    </div>
+                </div><!-- End Top Selling -->
+            </div>
 
+        <?php } else {
 
-
-
-                            if (isset($_GET['tid'])) {
-                                $tid = base64_decode($_GET['tid']);
-                                $getcategories = mysqli_query($conn, "SELECT a.*,if(b.categories_id is null ,'', 'selected') statusselected from categories a left join (select categories_id from blogs_categories where blogs_id='" . $tid . "') b on a.id=b.categories_id    ");
-                                $label = 'Edit';
-                                $labelbutton = 'Update';
-                                $getdata = mysqli_query($conn, "SELECT * from blogs where id = '$tid'");
-                                $rows = mysqli_fetch_assoc($getdata);
-                                $title = $rows['title'];
-                                $description = $rows['description'];
-                                $writer = $rows['writer'];
-                                $tags = $rows['tags'];
-                                $status = $rows['status'];
-                                if ($rows['foto'] == '' || $rows['foto'] == null) {
-                                    $foto = '';
-                                } else {
-                                    $foto =  '<div class="col-md-12 mt-4"> 
+            if (isset($_GET['tid'])) {
+                $tid = base64_decode($_GET['tid']);
+                $getcategories = mysqli_query($conn, "SELECT a.*,if(b.categories_id is null ,'', 'selected') statusselected from categories a left join (select categories_id from blogs_categories where blogs_id='" . $tid . "') b on a.id=b.categories_id    ");
+                $label = 'Edit';
+                $labelbutton = 'Update';
+                $getdata = mysqli_query($conn, "SELECT * from blogs where id = '$tid'");
+                $rows = mysqli_fetch_assoc($getdata);
+                $title = $rows['title'];
+                $subtitle = $rows['subtitle'];
+                $description = $rows['description'];
+                $writer = $rows['writer'];
+                $tags = $rows['tags'];
+                $status = $rows['status'];
+                if ($rows['foto'] == '' || $rows['foto'] == null) {
+                    $foto = '';
+                } else {
+                    $foto =  '<div class="col-md-12 mt-4"> 
                                                     <div class="alert alert-light border-primary alert-dismissible fade show" role="alert"> 
                                                         <img src="' . $rows['foto'] . '" alt="foto"   class="img-thumbnail">
                                                         <div class="col-12 mt-4"> 
@@ -123,33 +128,55 @@ $numdata = mysqli_num_rows($getdata);
                                                     </div>
                                                   </div>    
                                                 ';
-                                }
-                            } else {
-                                $tid = 0;
-                                $getcategories = mysqli_query($conn, "SELECT *,'' as statusselected from categories");
-                                $label = 'Add';
-                                $labelbutton = 'Save';
-                                $title = '';
-                                $description = '';
-                                $writer = '';
-                                $tags = '';
-                                $foto = '';
-                                $status = 1;
-                            }
-                            $numcategories = mysqli_num_rows($getcategories);
-                            $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
-                        ?>
+                }
+            } else {
+                $tid = 0;
+                $getcategories = mysqli_query($conn, "SELECT *,'' as statusselected from categories");
+                $label = 'Add';
+                $labelbutton = 'Save';
+                $title = '';
+                $description = '';
+                $writer = '';
+                $tags = '';
+                $foto = '';
+                $status = 1;
+            }
+            $numcategories = mysqli_num_rows($getcategories);
+            $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
+        ?>
+
+            <div class="row">
+                <div class="col-9">
+                    <div class="card top-selling overflow-auto effectup">
+                        <div class="card-body pb-0">
                             <input type="hidden" id="tid" name="tid" class="blogsform" value="<?= $tid; ?>">
                             <h5 class="card-title"><?= $label; ?> Form</h5>
                             <div class="row g-3">
-
-                                <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <label for="description">Description</label>
+                                    <textarea class="tinymce-editor" id="description"><?= $description; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card top-selling overflow-auto effectup">
+                        <div class="card-body pb-0">
+                            <div class="row g-3 p-1">
+                                <div class="col-md-12 mt-4">
                                     <div class="form-floating">
                                         <input type="text" class="form-control blogsform" name="title" id="title" value="<?= $title; ?>" placeholder="Title" required>
                                         <label for="title">Title</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control blogsform" name="subtitle" id="subtitle" placeholder="Subtitle"><?= $subtitle; ?></textarea>
+                                        <label for="writer">Subtitle</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" class="form-control blogsform" name="writer" id="writer" value="<?= $writer; ?>" placeholder="Writer" required>
                                         <label for="writer">Writer</label>
@@ -168,12 +195,6 @@ $numdata = mysqli_num_rows($getdata);
                                         <!-- <input type="text" class="form-control blogsform" name="tags" id="tags" value="<?= $tags; ?>" placeholder="Tags" required> -->
                                         <input type="text" class="form-control blogsform" data-role="tagsinput" name="tags" id="tags" value="<?= $tags; ?>" placeholder="Tags" required>
                                         <!-- <label for="tags">Tags</label> -->
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control blogsform" name="description" rows="10" id="description" value="<?= $description; ?>" placeholder="Description" required>
-                                        <label for="description">Description</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -198,14 +219,13 @@ $numdata = mysqli_num_rows($getdata);
                                     <span name="simpan" id="simpan_blogs" tipe="blogs" class="btn btn-primary" mode="<?= $label; ?>"><?= $labelbutton; ?></span>
                                 </div>
                             </div>
-                        <?php } ?>
-                        <!-- End floating Labels Form -->
+                        </div>
                     </div>
                 </div>
-            </div><!-- End Top Selling -->
+            </div>
+        <?php } ?>
+        <!-- End floating Labels Form -->
 
-
-        </div>
     </section>
 
 </main><!-- End #main -->

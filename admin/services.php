@@ -3,7 +3,7 @@ include('include/header.php');
 include('include/sidebar.php');
 $getdata = mysqli_query($conn, "SELECT *,case status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case status when '1' then 'success' else 'danger' end as statuscolor
-                                            from services ");
+                                            from services order by id desc");
 $numdata = mysqli_num_rows($getdata);
 
 ?>
@@ -24,7 +24,9 @@ $numdata = mysqli_num_rows($getdata);
                 <div class="card top-selling overflow-auto effectup">
                     <div class="card-body pb-0">
                         <?php if (!isset($_GET['form'])) { ?>
-                            <a class="btn btn-success mt-3 mb-3 float-right pull-right" href="services.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+                            <div align="right" class="mt-2">
+                                <a class="btn btn-success mt-3 mb-3 float-right pull-right" href="services.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+                            </div>
                             <table class="table table-striped table-bordered datatable mt-3">
                                 <thead>
                                     <tr>
