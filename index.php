@@ -72,26 +72,35 @@ foreach ($rowtablearr as $rowtable) {
     </nav>
     <section id="home-section" class="hero">
         <div class="home-slider  owl-carousel">
-            <div class="slider-item ">
-                <div class="overlay"></div>
-                <div class="container">
-                    <div class="row d-md-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
-                        <div class="one-third js-fullheight order-md-last img" style="background-image:url(assets/clark-master/images/bg_1.png);">
-                            <div class="overlay"></div>
-                        </div>
-                        <div class="one-forth d-flex  align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                            <div class="text">
-                                <span class="subheading">Hello!</span>
-                                <h1 class="mb-4 mt-3">I'm <span>Clark Thompson</span></h1>
-                                <h2 class="mb-4">A Freelance Web Designer</h2>
-                                <p><a href="#" class="btn btn-primary py-3 px-4">Hire me</a> <a href="#" class="btn btn-white btn-outline-white py-3 px-4">My works</a></p>
+
+            <?php
+            foreach ($rows['slidings'] as $rowsliding) {
+            ?>
+                <div class="slider-item ">
+                    <div class="overlay"></div>
+                    <div class="container">
+                        <div class="row d-md-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
+                            <div class="one-third js-fullheight order-md-last img" style="background-image:url(<?= str_replace('../', '', $rowsliding['foto']); ?>);">
+                                <div class="overlay"></div>
+                            </div>
+                            <div class="one-forth d-flex  align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+                                <div class="text">
+                                    <span class="subheading"><?= $rowsliding['subheading']; ?></span>
+                                    <h1 class="mb-4 mt-3"><?= $rowsliding['heading1']; ?> </h1>
+                                    <h2 class="mb-4">
+                                        <?php if ($rowsliding['heading2'] != '') { ?>
+                                            <h2 class="mb-4"><?= $rowsliding['heading2']; ?> </h2>
+                                        <?php } ?>
+                                        <p><a href="#" class="btn btn-primary py-3 px-4">Hire me</a> <a href="#" class="btn btn-white btn-outline-white py-3 px-4">My works</a></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="slider-item">
+            <?php
+            }
+            ?>
+            <!-- <div class="slider-item">
                 <div class="overlay"></div>
                 <div class="container">
                     <div class="row d-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
@@ -107,7 +116,7 @@ foreach ($rowtablearr as $rowtable) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 
@@ -305,7 +314,46 @@ foreach ($rowtablearr as $rowtable) {
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <?php
+                $n  = 1;
+                $m = 0;
+                $an = 1;
+                $nl = 0;
+                foreach ($rows['projects'] as $rowpro) {
+
+                    if ($n % 2 == 0) {
+                        $nl = $m % 2;
+                    } else {
+                        $nl = $an % 2;
+                    }
+
+                    if ($nl == 0) {
+                        $col = "8";
+                    } else {
+                        $col = "4";
+                    }
+                ?>
+
+                    <div class="col-md-<?= $col; ?>">
+                        <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rowpro['foto']); ?>);">
+                            <div class="overlay"></div>
+                            <div class="text text-center p-4">
+                                <h3><a href="#"><?= $rowpro['name']; ?></a></h3>
+                                <span><?= $rowpro['categories']; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                    if ($n % 2 == 0) {
+                        $m++;
+                    } else {
+                        $an++;
+                    }
+                    $n++;
+                } ?>
+
+                <!-- 
+                        <div class="col-md-4">
                     <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(<?= str_replace('../', '', $rows['projects'][3]['foto']); ?>);">
                         <div class="overlay"></div>
                         <div class="text text-center p-4">
@@ -363,6 +411,8 @@ foreach ($rowtablearr as $rowtable) {
                         </div>
                     </div>
                 </div>
+
+                    -->
             </div>
         </div>
     </section>
@@ -383,7 +433,7 @@ foreach ($rowtablearr as $rowtable) {
                 ?>
                     <div class="col-md-4 d-flex ftco-animate">
                         <div class="blog-entry justify-content-end">
-                            <a href="assets/clark-master/single.html" class="block-20" style="background-image: url('<?= str_replace('../', '', $rowsblogs['foto']); ?>');">
+                            <a href="single.php?blogs=<?= base64_encode($rowsblogs['id']); ?>" class="block-20" style="background-image: url('<?= str_replace('../', '', $rowsblogs['foto']); ?>');">
                             </a>
                             <div class="text mt-3 float-right d-block">
                                 <div class="d-flex align-items-center mb-3 meta">
@@ -393,7 +443,7 @@ foreach ($rowtablearr as $rowtable) {
                                         <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
                                     </p>
                                 </div>
-                                <h3 class="heading"><a href="assets/clark-master/single.html"><?= $rowsblogs['title']; ?></a></h3>
+                                <h3 class="heading"><a href="single.php?blogs=<?= base64_encode($rowsblogs['id']); ?>"><?= $rowsblogs['title']; ?></a></h3>
                                 <p><?= $rowsblogs['description']; ?></p>
                             </div>
                         </div>

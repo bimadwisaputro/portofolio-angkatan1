@@ -22,6 +22,13 @@
         <li class="nav-heading">Pages</li>
 
         <li class="nav-item">
+            <a class="nav-link collapsed sidebarleft" id="slidings" href="slidings.php">
+                <i class="bi bi-folder"></i>
+                <span>Sliding Page</span>
+            </a>
+        </li><!-- End F.A.Q Page Nav -->
+
+        <li class="nav-item">
             <a class="nav-link collapsed sidebarleft" id="services" href="services.php">
                 <i class="bi bi-folder"></i>
                 <span>Services</span>

@@ -303,7 +303,7 @@ if (isset($_POST)) {
 
     if ($_POST['tipe'] == 'blogs') {
         $tid = $_POST['tid'];
-        $categories_id = $_POST['categories_id'];
+        // $categories_id = $_POST['categories_id'];
         $title = $_POST['title'];
         $description = $_POST['description'];
         $writer = $_POST['writer'];
@@ -339,16 +339,16 @@ if (isset($_POST)) {
 
         if ($mode == 'Add') {
             $runsql = mysqli_query($conn, "INSERT INTO blogs 
-                                                        (`categories_id`, `title`, `description`, `writer`, `foto`, `tags`, `status`, `created_id`)
+                                                        ( `title`, `description`, `writer`, `foto`, `tags`, `status`, `created_id`)
                                                         VALUES
-                                                        ('$categories_id','$title','$description','$writer','$foto','$tags','$status','" . $_SESSION['userid'] . "')                                    
+                                                        ( '$title','$description','$writer','$foto','$tags','$status','" . $_SESSION['userid'] . "')                                    
                                     ");
+            $last_id = $conn->insert_id;
         }
         if ($mode == 'Edit') {
             $runsql = mysqli_query($conn, "
                                     UPDATE blogs 
-                                    SET 
-                                    categories_id = '" . $categories_id . "',
+                                    SET  
                                     title = '" . $title . "',
                                     description = '" . $description . "',
                                     writer = '" . $writer . "', 
@@ -357,9 +357,31 @@ if (isset($_POST)) {
                                     foto = '" . $foto . "' 
                                     where id='$tid'  
                                     ");
+            $last_id = $tid;
         }
 
+
+
+
+
         if ($runsql) {
+
+            if (isset($_POST['categories']) && $_POST['categories'] != '') {
+                $res_cat = explode(",", $_POST['categories']);
+                $getdata = mysqli_query($conn, "SELECT * from blogs_categories where blogs_id='$last_id' ");
+                $cekdata = mysqli_num_rows($getdata);
+                if ($cekdata  > 0) {
+                    $deletedata = mysqli_query($conn, "DELETE from blogs_categories where blogs_id='$last_id' ");
+                }
+                foreach ($res_cat as $rowcat) {
+                    $insert_detail_categories = mysqli_query($conn, "INSERT INTO blogs_categories 
+                        (`categories_id`, `blogs_id`)
+                        VALUES
+                        ('" . $rowcat . "','" . $last_id . "')                                    
+                    ");
+                }
+            }
+
             if ($statusfoto == 1) {
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $fillpath)) {
                     //xxx
@@ -430,6 +452,69 @@ if (isset($_POST)) {
         }
     }
 
+
+    if ($_POST['tipe'] == 'slidings') {
+        $tid = $_POST['tid'];
+        $subheading = mysqli_escape_string($conn, $_POST['subheading']);
+        $heading1 = mysqli_escape_string($conn, $_POST['heading1']);
+        $heading2 = mysqli_escape_string($conn, $_POST['heading2']);
+        $status = $_POST['status'];
+        $mode = $_POST['mode'];
+        if ($mode == 'Edit') {
+            $getdata = mysqli_query($conn, "SELECT * from slidings where id='$tid' ");
+            $rows = mysqli_fetch_assoc($getdata);
+        }
+        $statusfoto = 0;
+        if (isset($_POST['foto'])) {
+            $foto = '';
+            if ($mode == 'Edit') {
+                $foto = $rows['foto'];
+            }
+        } else {
+            if ($_FILES['foto']['error'] == 0) {
+                $fillname = rand() . '_' . $_SESSION['userid'];
+                $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                $fillpath = "../uploads/slidings-foto/" . $fillname . '.' . $ext;
+                if ($_FILES['foto']['error'] == 0) {
+                    $foto = "../uploads/slidings-foto/" . $fillname . '.' . $ext;
+                }
+                $statusfoto = 1;
+            } else {
+                $foto = '';
+                if ($mode == 'Edit') {
+                    $foto = $rows['foto'];
+                }
+            }
+        }
+
+        if ($mode == 'Add') {
+            $runsql = mysqli_query($conn, "INSERT INTO slidings 
+                                                        (`subheading`,heading1,heading2,`status`,foto,created_id) 
+                                                        VALUES
+                                                        ('$subheading','$heading1','$heading2','$status','$foto','" . $_SESSION['userid'] . "')                                    
+                                    ");
+        }
+        if ($mode == 'Edit') {
+            $runsql = mysqli_query($conn, "
+                                    UPDATE slidings 
+                                    SET 
+                                    subheading = '" . $subheading . "',
+                                    heading1 = '" . $heading1 . "',
+                                    heading2 = '" . $heading2 . "',
+                                    status = '" . $status . "', 
+                                    foto = '" . $foto . "' 
+                                    where id='$tid'  
+                                    ");
+        }
+
+        if ($runsql) {
+            if ($statusfoto == 1) {
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $fillpath)) {
+                    //xxx
+                }
+            }
+        }
+    }
 
 
     if ($runsql) {

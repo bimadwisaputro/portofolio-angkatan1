@@ -30,6 +30,9 @@ if (!isset($_SESSION['username'])) {
     <!-- css spinner load -->
     <link rel="stylesheet" href="../css/loading_spinner.css" type="text/css">
 
+    <link href="../assets/bootstrap-tags/bootstrap-tagsinput.css" rel="stylesheet">.
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Vendor CSS Files -->
     <link href="../assets/adminlte/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/adminlte/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -45,6 +48,28 @@ if (!isset($_SESSION['username'])) {
     <!-- izitoast -->
     <link href="../assets/iziToast/dist/css/iziToast.css" rel="stylesheet">
     <style>
+        .bootstrap-tagsinput .tag {
+            margin-right: 2px;
+            color: #FFFFFF;
+            background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
+            padding: 3px 10px 3px 10px;
+            border-radius: 10px;
+        }
+
+        .bootstrap-tagsinput {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            display: inline-block;
+            padding: 8px 10px;
+            color: #555;
+            vertical-align: middle;
+            border-radius: 4px;
+            width: 100%;
+            line-height: 22px;
+            cursor: text;
+        }
+
         .circular {
             width: 70px;
             height: 70px;

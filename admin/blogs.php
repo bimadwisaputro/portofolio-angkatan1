@@ -1,15 +1,10 @@
 <?php
 include('include/header.php');
 include('include/sidebar.php');
-$getdata = mysqli_query($conn, "SELECT  a.*,b.name categoriesname ,case a.status when '1' then 'Active' else 'Not Active' end as statuslabel 
+$getdata = mysqli_query($conn, "SELECT  a.* ,case a.status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case a.status when '1' then 'success' else 'danger' end as statuscolor
-                                         from blogs a left join categories b on a.categories_id=b.id ");
+                                         from blogs a   ");
 $numdata = mysqli_num_rows($getdata);
-$getcategories = mysqli_query($conn, "SELECT * from categories");
-$numcategories = mysqli_num_rows($getcategories);
-$rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
-
-
 ?>
 <main id="main" class="main">
     <div class="pagetitle">
@@ -33,11 +28,11 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Category</th>
                                         <th>Title</th>
                                         <th>Description</th>
                                         <th>Writer</th>
                                         <th>Tags</th>
+                                        <th>Category</th>
                                         <th>Foto</th>
                                         <th>Status</th>
                                         <th>#</th>
@@ -50,7 +45,6 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                         <?php while ($rows = mysqli_fetch_assoc($getdata)) { ?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
-                                                <td><?= $rows['categoriesname']; ?></td>
                                                 <td><?= $rows['title']; ?></td>
                                                 <td><?= $rows['description']; ?></td>
                                                 <td><?= $rows['writer']; ?></td>
@@ -61,6 +55,18 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                                     ?>
                                                         <span class="badge text-bg-primary"><?= $labels; ?></span>
 
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $getcatblog = mysqli_query($conn, "SELECT b.* from blogs_categories a left join categories b on a.categories_id=b.id where a.blogs_id='" . $rows['id'] . "'");
+                                                    $numcatblog = mysqli_num_rows($getcatblog);
+                                                    $rowcatblog = mysqli_fetch_all($getcatblog, MYSQLI_ASSOC);
+                                                    foreach ($rowcatblog as $rowscb) {
+                                                    ?>
+                                                        <span class="badge text-bg-warning"><?= $rowscb['name']; ?></span>
                                                     <?php
                                                     }
                                                     ?>
@@ -88,16 +94,18 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                 </tbody>
                             </table>
 
-                        <?php } else { ?>
-                            <?php
+                        <?php } else {
+
+
+
+
                             if (isset($_GET['tid'])) {
+                                $tid = base64_decode($_GET['tid']);
+                                $getcategories = mysqli_query($conn, "SELECT a.*,if(b.categories_id is null ,'', 'selected') statusselected from categories a left join (select categories_id from blogs_categories where blogs_id='" . $tid . "') b on a.id=b.categories_id    ");
                                 $label = 'Edit';
                                 $labelbutton = 'Update';
-                                $tid = base64_decode($_GET['tid']);
-                                $getdata = mysqli_query($conn, "SELECT a.*,b.name categoriesname from blogs a left join categories b on a.categories_id=b.id where a.id = '$tid'");
+                                $getdata = mysqli_query($conn, "SELECT * from blogs where id = '$tid'");
                                 $rows = mysqli_fetch_assoc($getdata);
-                                $categoriesname = $rows['categoriesname'];
-                                $categories_id = $rows['categories_id'];
                                 $title = $rows['title'];
                                 $description = $rows['description'];
                                 $writer = $rows['writer'];
@@ -117,11 +125,10 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                                 ';
                                 }
                             } else {
+                                $tid = 0;
+                                $getcategories = mysqli_query($conn, "SELECT *,'' as statusselected from categories");
                                 $label = 'Add';
                                 $labelbutton = 'Save';
-                                $tid = 0;
-                                $categoriesname = '';
-                                $categories_id = 0;
                                 $title = '';
                                 $description = '';
                                 $writer = '';
@@ -129,26 +136,13 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                 $foto = '';
                                 $status = 1;
                             }
-                            ?>
+                            $numcategories = mysqli_num_rows($getcategories);
+                            $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
+                        ?>
                             <input type="hidden" id="tid" name="tid" class="blogsform" value="<?= $tid; ?>">
                             <h5 class="card-title"><?= $label; ?> Form</h5>
                             <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select blogsform" id="categories_id" aria-label="Categories">
-                                            <?php foreach ($rowcategories as $rowcat) { ?>
-                                                <option value="<?= $rowcat['id']; ?>" <?php if ($rowcat['id'] == $categories_id) echo 'selected'; ?>><?= $rowcat['name']; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                        <label for="status">Categories</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control blogsform" name="writer" id="writer" value="<?= $writer; ?>" placeholder="Writer" required>
-                                        <label for="writer">Writer</label>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" class="form-control blogsform" name="title" id="title" value="<?= $title; ?>" placeholder="Title" required>
@@ -157,8 +151,23 @@ $rowcategories = mysqli_fetch_all($getcategories, MYSQLI_ASSOC);
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control blogsform" name="tags" id="tags" value="<?= $tags; ?>" placeholder="Tags" required>
-                                        <label for="tags">Tags</label>
+                                        <input type="text" class="form-control blogsform" name="writer" id="writer" value="<?= $writer; ?>" placeholder="Writer" required>
+                                        <label for="writer">Writer</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="categories">Categories</label>
+                                    <select class="form-control blogsform select2tags" name="categories[]" multiple="multiple" id="categories">
+                                        <?php foreach ($rowcategories as $rowcat) { ?>
+                                            <option value="<?= $rowcat['id']; ?>" <?= $rowcat['statusselected']; ?>><?= $rowcat['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <!-- <input type="text" class="form-control blogsform" name="tags" id="tags" value="<?= $tags; ?>" placeholder="Tags" required> -->
+                                        <input type="text" class="form-control blogsform" data-role="tagsinput" name="tags" id="tags" value="<?= $tags; ?>" placeholder="Tags" required>
+                                        <!-- <label for="tags">Tags</label> -->
                                     </div>
                                 </div>
                                 <div class="col-md-12">

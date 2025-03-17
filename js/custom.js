@@ -239,6 +239,8 @@ $(document).on("click", "[id^=simpan_]", function (e) {
     dataMap["" + idx + ""] = "" + value + "";
     formData.append("" + idx + "", "" + value + "");
   });
+  // console.log(dataMap["categories"]);
+  // return false;
 
   if (tipe == "contacts") {
     var links = "php/simpan.php";
