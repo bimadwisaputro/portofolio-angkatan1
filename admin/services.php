@@ -1,6 +1,5 @@
 <?php
-include('include/header.php');
-include('include/sidebar.php');
+
 $getdata = mysqli_query($conn, "SELECT *,case status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case status when '1' then 'success' else 'danger' end as statuscolor
                                             from services order by id desc");
@@ -34,6 +33,7 @@ $numdata = mysqli_num_rows($getdata);
                                         <th>
                                             <b>N</b>ame
                                         </th>
+                                        <th>Description</th>
                                         <th>Foto</th>
                                         <th>Status</th>
                                         <th>#</th>
@@ -47,6 +47,7 @@ $numdata = mysqli_num_rows($getdata);
                                             <tr>
                                                 <td><?= $i++; ?></td>
                                                 <td><?= $rows['name']; ?></td>
+                                                <td><?= $rows['description']; ?></td>
                                                 <td class="text-center">
                                                     <?php if ($rows['foto'] != '' || $rows['foto'] != null) { ?>
                                                         <div class="circular">
@@ -74,6 +75,37 @@ $numdata = mysqli_num_rows($getdata);
 
                         <?php } else { ?>
                             <?php
+
+                            $apiKey = "YOUR_API_KEY"; // Gantilah dengan API key Flaticon Anda
+                            $endpoint = "https://api.flaticon.com/v3/app/search/icons?q=technology";
+
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL, $endpoint);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                                "Authorization: Bearer $apiKey",
+                            ]);
+
+                            $response = curl_exec($ch);
+                            curl_close($ch);
+
+                            $data = json_decode($response, true);
+
+                            // Cek apakah ada hasil
+                            if (!empty($data['data'])) {
+                                $iconClassList = [];
+                                foreach ($data['data'] as $icon) {
+                                    $iconClassList[] = $icon['id']; // Simpan ID ikon sebagai class
+                                }
+
+                                // Menampilkan dalam format array PHP
+                                // echo "<pre>";
+                                // print_r($iconClassList);
+                                // echo "</pre>";
+                            } else {
+                                // echo "Tidak ada ikon ditemukan.";
+                            }
+
                             if (isset($_GET['tid'])) {
                                 $label = 'Edit';
                                 $labelbutton = 'Update';
@@ -81,6 +113,7 @@ $numdata = mysqli_num_rows($getdata);
                                 $getdata = mysqli_query($conn, "SELECT * from services where id = '$tid'");
                                 $rows = mysqli_fetch_assoc($getdata);
                                 $name = $rows['name'];
+                                $description = $rows['description'];
                                 $status = $rows['status'];
                                 if ($rows['foto'] == '' || $rows['foto'] == null) {
                                     $foto = '';
@@ -100,6 +133,7 @@ $numdata = mysqli_num_rows($getdata);
                                 $labelbutton = 'Save';
                                 $tid = 0;
                                 $name = '';
+                                $description = '';
                                 $foto = '';
                                 $status = 1;
                             }
@@ -111,6 +145,12 @@ $numdata = mysqli_num_rows($getdata);
                                     <div class="form-floating">
                                         <input type="text" class="form-control servicesform" name="name" id="name" value="<?= $name; ?>" placeholder="Services Name" required>
                                         <label for="floatingName">Services Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control servicesform" placeholder="Description" name="description" id="description" style="height: 100px;"><?= $description; ?></textarea>
+                                        <label for="address">Description</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -146,5 +186,3 @@ $numdata = mysqli_num_rows($getdata);
     </section>
 
 </main><!-- End #main -->
-
-<?php include('include/footer.php'); ?>

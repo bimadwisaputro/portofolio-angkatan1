@@ -1,6 +1,5 @@
 <?php
-include('include/header.php');
-include('include/sidebar.php');
+
 
 $getdata = mysqli_query($conn, "SELECT * from settings ");
 $numdata = mysqli_num_rows($getdata);
@@ -14,6 +13,7 @@ if ($numdata > 0) {
     $address_isi = $rows['address'];
     $birthday_isi = $rows['birthday'];
     $zipcode = $rows['zipcode'];
+    $about = $rows['about'];
     if ($rows['logo'] == '' || $rows['logo'] == null) {
         $logo_isi = '';
     } else {
@@ -40,6 +40,7 @@ if ($numdata > 0) {
     $birthday_isi = '';
     $zipcode = '';
     $logo_isi = '';
+    $about = '';
 }
 
 
@@ -107,10 +108,16 @@ if ($numdata > 0) {
                                     <label for="address">Address</label>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control settingsform" placeholder="About" name="about" id="about" style="height: 100px;"><?= $about; ?></textarea>
+                                    <label for="address">About</label>
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="col-md-12">
-                                    <label for="logo">Logo</label>
-                                    <input type="file" class="form-control mt-1" name="foto" id="foto" placeholder="Logo">
+                                    <label for="logo">Foto</label>
+                                    <input type="file" class="form-control mt-1" name="foto" id="foto" placeholder="Foto">
                                 </div>
                                 <?= $logo_isi; ?>
                             </div>
@@ -130,5 +137,3 @@ if ($numdata > 0) {
     </section>
 
 </main><!-- End #main -->
-
-<?php include('include/footer.php'); ?>

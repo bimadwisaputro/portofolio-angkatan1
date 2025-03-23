@@ -1,6 +1,5 @@
 <?php
-include('include/header.php');
-include('include/sidebar.php');
+
 $getdata = mysqli_query($conn, "SELECT *,case status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case status when '1' then 'success' else 'danger' end as statuscolor 
                                         from projects order by id desc ");
@@ -152,5 +151,3 @@ $numdata = mysqli_num_rows($getdata);
     </section>
 
 </main><!-- End #main -->
-
-<?php include('include/footer.php'); ?>

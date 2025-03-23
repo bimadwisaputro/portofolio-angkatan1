@@ -35,6 +35,22 @@
 <!-- izitoast -->
 <script src="../assets/iziToast/dist/js/iziToast.js"></script>
 <script>
+    //sidebarleft
+    $.each($(".sidebarleft"), function(index, value) {
+        var id = $(this).attr('id');
+        var parentid = $(this).attr('parentid');
+        if (id == '<?= $getpage; ?>') {
+            if (parentid == '') {
+                $("#" + id).removeClass('collapsed');
+            } else {
+                $("#" + id).addClass('active');
+                $("#" + parentid + "-nav").addClass('show');
+                $("#" + parentid + "").removeClass('collapsed');
+            }
+        }
+
+    })
+
     $('.select2tags').select2();
 
     var url = window.location.href;
@@ -43,21 +59,21 @@
     var filename = res[countres].split('.');
     console.log(filename[0]);
 
-    //sidebarleft
-    $.each($(".sidebarleft"), function(index, value) {
-        var id = $(this).attr('id');
-        // var id = href.split('.');
-        // console.log(id[0] + '==' + filename[0]);
-        if (id == filename[0]) {
-            if (id == "categories") {
-                $("#" + id).addClass('active');
-                $("#tables-nav").addClass('show');
-                $("#masters").removeClass('collapsed');
-            } else {
-                $("#" + id).removeClass('collapsed');
-            }
-        }
-    })
+    // //sidebarleft
+    // $.each($(".sidebarleft"), function(index, value) {
+    //     var id = $(this).attr('id');
+    //     // var id = href.split('.');
+    //     // console.log(id[0] + '==' + filename[0]);
+    //     if (id == filename[0]) {
+    //         if (id == "categories") {
+    //             $("#" + id).addClass('active');
+    //             $("#tables-nav").addClass('show');
+    //             $("#masters").removeClass('collapsed');
+    //         } else {
+    //             $("#" + id).removeClass('collapsed');
+    //         }
+    //     }
+    // })
 
     setTimeout(function() {
         $('#loading').hide();

@@ -1,6 +1,5 @@
 <?php
-include('include/header.php');
-include('include/sidebar.php');
+
 $getdata = mysqli_query($conn, "SELECT  a.* ,case a.status when '1' then 'Active' else 'Not Active' end as statuslabel 
                                         ,case a.status when '1' then 'success' else 'danger' end as statuscolor
                                          from blogs a  order by a.id desc ");
@@ -135,6 +134,7 @@ $numdata = mysqli_num_rows($getdata);
                 $label = 'Add';
                 $labelbutton = 'Save';
                 $title = '';
+                $subtitle = '';
                 $description = '';
                 $writer = '';
                 $tags = '';
@@ -229,5 +229,3 @@ $numdata = mysqli_num_rows($getdata);
     </section>
 
 </main><!-- End #main -->
-
-<?php include('include/footer.php'); ?>

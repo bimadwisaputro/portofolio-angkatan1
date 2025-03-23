@@ -19,7 +19,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $rows = mysqli_fetch_assoc($login);
             $_SESSION['login'] = 1;
             $_SESSION['email'] = $email;
-            $_SESSION['user_level_id'] = $rows['user_level_id'];
+            $_SESSION['user_level_id'] = $rows['level_id'];
             $_SESSION['username'] = $rows['username'];
             $_SESSION['fullname'] = $rows['fullname'];
             if (empty($rows['photoprofile']) || $rows['photoprofile'] == '' || $rows['photoprofile'] == null) {

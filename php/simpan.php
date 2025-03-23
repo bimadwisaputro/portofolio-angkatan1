@@ -10,9 +10,10 @@ if (isset($_POST)) {
         $website_address = $_POST['website_address'];
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
-        $address = $_POST['address'];
+        $address =  mysqli_escape_string($conn, $_POST['address']);
         $birthday = $_POST['birthday'];
         $zipcode = $_POST['zipcode'];
+        $about =  mysqli_escape_string($conn, $_POST['about']);
 
         $getdata = mysqli_query($conn, "SELECT * from settings ");
         $numdata = mysqli_num_rows($getdata);
@@ -48,6 +49,7 @@ if (isset($_POST)) {
                                     email = '" . $email . "', 
                                     logo = '" . $foto . "', 
                                     zipcode = '" . $zipcode . "', 
+                                    about = '" . $about . "', 
                                     address = '" . $address . "'  
                                     
                                     ");
@@ -70,9 +72,9 @@ if (isset($_POST)) {
                 }
             }
             $runsql = mysqli_query($conn, "INSERT INTO settings 
-                ( website_name, website_address, phone_number, email, `address`, logo , zipcode , created_id) 
+                ( website_name, website_address, phone_number, email, `address`, logo , zipcode , about, created_id) 
                 VALUES
-                ('$website_name', '$website_address', '$phone_number', '$email', '$address', '$foto', '$zipcode','" . $_SESSION['userid'] . "')                                    
+                ('$website_name', '$website_address', '$phone_number', '$email', '$address', '$foto', '$zipcode','$about','" . $_SESSION['userid'] . "')                                    
                     ");
         }
     }
@@ -81,6 +83,7 @@ if (isset($_POST)) {
     if ($_POST['tipe'] == 'services') {
         $tid = $_POST['tid'];
         $name = $_POST['name'];
+        $description = mysqli_escape_string($conn, $_POST['description']);
         $status = $_POST['status'];
         $mode = $_POST['mode'];
         if ($mode == 'Edit') {
@@ -112,9 +115,9 @@ if (isset($_POST)) {
 
         if ($mode == 'Add') {
             $runsql = mysqli_query($conn, "INSERT INTO services 
-                                                        (`name`,`status`,foto,created_id) 
+                                                        (`name`,`description`,`status`,foto,created_id) 
                                                         VALUES
-                                                        ('$name','$status','$foto','" . $_SESSION['userid'] . "')                                    
+                                                        ('$name','$description','$status','$foto','" . $_SESSION['userid'] . "')                                    
                                     ");
         }
         if ($mode == 'Edit') {
@@ -122,6 +125,7 @@ if (isset($_POST)) {
                                     UPDATE services 
                                     SET 
                                     name = '" . $name . "',
+                                    description = '" . $description . "',
                                     status = '" . $status . "', 
                                     foto = '" . $foto . "' 
                                     where id='$tid'  
@@ -134,6 +138,21 @@ if (isset($_POST)) {
                     //xxx
                 }
             }
+        }
+    }
+
+    if ($_POST['tipe'] == 'comments') {
+
+        $mode = $_POST['mode'];
+        if ($mode == 'Add') {
+            $name = mysqli_escape_string($conn, $_POST['name']);
+            $blogs_id =   base64_decode($_POST['blogs_id']);
+            $message = mysqli_escape_string($conn, $_POST['message']);
+            $runsql = mysqli_query($conn, "INSERT INTO comments 
+                                    (`name`,`blogs_id`,`message`) 
+                                    VALUES
+                                    ('$name','$blogs_id','$message')                                    
+                                ");
         }
     }
 

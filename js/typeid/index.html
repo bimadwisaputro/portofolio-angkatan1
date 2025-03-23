@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Typed.js - Type your heart out</title>
+    <!-- <script src="dist/typed.umd.js"></script> -->
+  
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="title">Typed.js</h1>
+
+      <div class="links">
+        <a href="https://github.com/mattboldt/typed.js">GitHub</a> |
+        <a href="http://www.mattboldt.com/typed.js/docs">Documentation</a> |
+        <a href="http://www.mattboldt.com/demos/typed-js">View original demo</a>
+        | <a href="http://www.mattboldt.com">View mattboldt.com</a>
+      </div>
+
+      <hr />
+
+      <h2 id="basic">Basic Demo</h2>
+      <div class="type-wrap">
+        <div class="typed-strings3">
+          <span>aku bima<strong></span> 
+          <span>aku web developer</span> 
+        </div>
+        <span class="typed3" style="white-space: pre"></span>
+      </div>
+      <button class="toggle">Toggle</button>
+      <button class="start">Start</button>
+      <button class="stop">Stop</button>
+      <button class="reset">Reset</button>
+      <button class="destroy">Destroy</button>
+      <button class="loop">Toggle Loop</button>
+
+      
+    </div>
+
+
+    <!-- <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script> -->
+    <script src="dist/typed.umd.js"></script> 
+	
+    <script >
+      document.addEventListener('DOMContentLoaded', function () {
+  var typed = new Typed('.typed3', {
+    stringsElement: '.typed-strings3',
+    typeSpeed: 20,
+    backSpeed: 20,
+    startDelay: 100,
+    loop: true,
+    loopCount: Infinity,
+    onBegin: function (self) {
+      prettyLog('onBegin ' + self);
+    },
+    onComplete: function (self) {
+      prettyLog('onComplete ' + self);
+    },
+    preStringTyped: function (pos, self) {
+      prettyLog('preStringTyped ' + pos + ' ' + self);
+    },
+    onStringTyped: function (pos, self) {
+      prettyLog('onStringTyped ' + pos + ' ' + self);
+    },
+    onLastStringBackspaced: function (self) {
+      prettyLog('onLastStringBackspaced ' + self);
+    },
+    onTypingPaused: function (pos, self) {
+      prettyLog('onTypingPaused ' + pos + ' ' + self);
+    },
+    onTypingResumed: function (pos, self) {
+      prettyLog('onTypingResumed ' + pos + ' ' + self);
+    },
+    onReset: function (self) {
+      prettyLog('onReset ' + self);
+    },
+    onStop: function (pos, self) {
+      prettyLog('onStop ' + pos + ' ' + self);
+    },
+    onStart: function (pos, self) {
+      prettyLog('onStart ' + pos + ' ' + self);
+    },
+    onDestroy: function (self) {
+      prettyLog('onDestroy ' + self);
+    },
+  });
+
+  document.querySelector('.toggle').addEventListener('click', function () {
+    typed.toggle();
+  });
+  document.querySelector('.stop').addEventListener('click', function () {
+    typed.stop();
+  });
+  document.querySelector('.start').addEventListener('click', function () {
+    typed.start();
+  });
+  document.querySelector('.reset').addEventListener('click', function () {
+    typed.reset();
+  });
+  document.querySelector('.destroy').addEventListener('click', function () {
+    typed.destroy();
+  });
+  document.querySelector('.loop').addEventListener('click', function () {
+    toggleLoop(typed);
+  });
+
+   
+});
+
+function prettyLog(str) {
+  console.log('%c ' + str, 'color: green; font-weight: bold;');
+}
+
+function toggleLoop(typed) {
+  if (typed.loop) {
+    typed.loop = false;
+  } else {
+    typed.loop = true;
+  }
+}
+
+    </script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+  </body>
+</html>
