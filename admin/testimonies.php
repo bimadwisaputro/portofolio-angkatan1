@@ -1,18 +1,17 @@
 <?php
 
 $getdata = mysqli_query($conn, "SELECT *,case status when '1' then 'Active' else 'Not Active' end as statuslabel 
-                                        ,case status when '1' then 'success' else 'danger' end as statuscolor 
-                                        from projects order by id desc ");
+                                        ,case status when '1' then 'success' else 'danger' end as statuscolor
+                                            from testimonies order by id desc");
 $numdata = mysqli_num_rows($getdata);
-
 ?>
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Projects</h1>
+        <h1>Testimonies</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-                <li class="breadcrumb-item active">Projects</li>
+                <li class="breadcrumb-item active">Testimonies</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -30,9 +29,12 @@ $numdata = mysqli_num_rows($getdata);
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Categories</th>
-                                        <th>Name</th>
-                                        <th>Photo</th>
+                                        <th>
+                                            <b>N</b>ame
+                                        </th>
+                                        <th>Position</th>
+                                        <th>Message</th>
+                                        <th>Foto</th>
                                         <th>Status</th>
                                         <th>#</th>
                                     </tr>
@@ -44,25 +46,28 @@ $numdata = mysqli_num_rows($getdata);
                                         <?php while ($rows = mysqli_fetch_assoc($getdata)) { ?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
-                                                <td><?= $rows['categories']; ?></td>
                                                 <td><?= $rows['name']; ?></td>
+                                                <td><?= $rows['position']; ?></td>
+                                                <td><?= $rows['message']; ?></td>
                                                 <td class="text-center">
                                                     <?php if ($rows['foto'] != '' || $rows['foto'] != null) { ?>
-                                                        <img src="<?= $rows['foto']; ?>" alt="logo" class="img-thumbnail">
+                                                        <div class="circular">
+                                                            <img src="<?= $rows['foto']; ?>" alt="logo">
+                                                        </div>
                                                     <?php } ?>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="badge bg-<?= $rows['statuscolor']; ?>"><?= $rows['statuslabel']; ?></span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="projects"><i class="bi bi-trash"></i></a>
+                                                    <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="testimonies"><i class="bi bi-trash"></i></a>
                                                     <a href="<?= $links_path; ?>&form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
                                                 </td>
                                             </tr>
                                         <?php } ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td colspan="6">No Data Entry</td>
+                                            <td colspan="7">No Data Entry</td>
                                         </tr>
                                     <?php } ?>
 
@@ -71,14 +76,16 @@ $numdata = mysqli_num_rows($getdata);
 
                         <?php } else { ?>
                             <?php
+
                             if (isset($_GET['tid'])) {
                                 $label = 'Edit';
                                 $labelbutton = 'Update';
                                 $tid = base64_decode($_GET['tid']);
-                                $getdata = mysqli_query($conn, "SELECT * from projects where id = '$tid'");
+                                $getdata = mysqli_query($conn, "SELECT * from testimonies where id = '$tid'");
                                 $rows = mysqli_fetch_assoc($getdata);
-                                $categories = $rows['categories'];
                                 $name = $rows['name'];
+                                $position = $rows['position'];
+                                $message = $rows['message'];
                                 $status = $rows['status'];
                                 if ($rows['foto'] == '' || $rows['foto'] == null) {
                                     $foto = '';
@@ -87,7 +94,7 @@ $numdata = mysqli_num_rows($getdata);
                                                     <div class="alert alert-light border-primary alert-dismissible fade show" role="alert"> 
                                                         <img src="' . $rows['foto'] . '" alt="foto"   class="img-thumbnail">
                                                         <div class="col-12 mt-4"> 
-                                                            <span class="btn btn-danger" id="deletefoto" tid="' . $tid . '" tipe="projects"  ><i class="bi bi-trash"></i> Hapus Foto </span>
+                                                            <span class="btn btn-danger" id="deletefoto" tid="' . $tid . '" tipe="testimonies"  ><i class="bi bi-trash"></i> Hapus Foto </span>
                                                         </div>
                                                     </div>
                                                   </div>    
@@ -97,37 +104,44 @@ $numdata = mysqli_num_rows($getdata);
                                 $label = 'Add';
                                 $labelbutton = 'Save';
                                 $tid = 0;
-                                $categories = '';
                                 $name = '';
+                                $position = '';
+                                $message = '';
                                 $foto = '';
                                 $status = 1;
                             }
                             ?>
-                            <input type="hidden" id="tid" name="tid" class="projectsform" value="<?= $tid; ?>">
+                            <input type="hidden" id="tid" name="tid" class="testimoniesform" value="<?= $tid; ?>">
                             <h5 class="card-title"><?= $label; ?> Form</h5>
                             <div class="row g-3">
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control projectsform" name="categories" id="categories" value="<?= $categories; ?>" placeholder="Categories Name" required>
-                                        <label for="categories">Categories Name</label>
+                                        <input type="text" class="form-control testimoniesform" name="name" id="name" value="<?= $name; ?>" placeholder="Name" required>
+                                        <label for="floatingName"> Name</label>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control projectsform" name="name" id="name" value="<?= $name; ?>" placeholder="projects Name" required>
-                                        <label for="name">Projects Name</label>
+                                        <input type="text" class="form-control testimoniesform" name="position" id="position" value="<?= $position; ?>" placeholder="Position" required>
+                                        <label for="address">Position</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control testimoniesform" placeholder="Message" name="message" id="message" style="height: 100px;"><?= $message; ?></textarea>
+                                        <label for="address">Message</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="col-md-12">
-                                        <label for="foto">Foto Projects</label>
+                                        <label for="logo">Foto</label>
                                         <input type="file" class="form-control mt-1" name="foto" id="foto" placeholder="Foto">
                                     </div>
                                     <?= $foto; ?>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select projectsform" id="status" aria-label="Status">
+                                        <select class="form-select testimoniesform" id="status" aria-label="Status">
                                             <option value="1" <?php if ($status == 1) echo 'selected'; ?>>Active</option>
                                             <option value="0" <?php if ($status == 0) echo 'selected'; ?>>Non Active</option>
                                         </select>
@@ -136,8 +150,8 @@ $numdata = mysqli_num_rows($getdata);
                                 </div>
 
                                 <div class="text-center mb-3 mt-4">
-                                    <a href="projects.php" class="btn btn-danger">Cancel</a>
-                                    <span name="simpan" id="simpan_projects" tipe="projects" class="btn btn-primary" mode="<?= $label; ?>"><?= $labelbutton; ?></span>
+                                    <a href="testimonies.php" class="btn btn-danger">Cancel</a>
+                                    <span name="simpan" id="simpan_testimonies" tipe="testimonies" class="btn btn-primary" mode="<?= $label; ?>"><?= $labelbutton; ?></span>
                                 </div>
                             </div>
                         <?php } ?>

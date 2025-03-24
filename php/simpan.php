@@ -237,35 +237,65 @@ if (isset($_POST)) {
         }
     }
 
-    if ($_POST['tipe'] == 'resumes') {
+    if ($_POST['tipe'] == 'testimonies') {
         $tid = $_POST['tid']; //table id
-        $title = $_POST['title'];
-        $subtitle = mysqli_escape_string($conn, $_POST['subtitle']);
-        $description = mysqli_escape_string($conn, $_POST['description']);
-        $from_year = $_POST['from_year'];
-        $to_year = $_POST['to_year'];
+        $name = $_POST['name'];
+        $position = $_POST['position'];
+        $message = mysqli_escape_string($conn, $_POST['message']);
         $status = $_POST['status'];
         $mode = $_POST['mode'];
 
+        if ($mode == 'Edit') {
+            $getdata = mysqli_query($conn, "SELECT * from blogs where id='$tid' ");
+            $rows = mysqli_fetch_assoc($getdata);
+        }
+        $statusfoto = 0;
+        if (isset($_POST['foto'])) {
+            $foto = '';
+            if ($mode == 'Edit') {
+                $foto = $rows['foto'];
+            }
+        } else {
+            if ($_FILES['foto']['error'] == 0) {
+                $fillname = rand() . '_' . $_SESSION['userid'];
+                $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                $fillpath = "../uploads/testimonies-foto/" . $fillname . '.' . $ext;
+                if ($_FILES['foto']['error'] == 0) {
+                    $foto = "../uploads/testimonies-foto/" . $fillname . '.' . $ext;
+                }
+                $statusfoto = 1;
+            } else {
+                $foto = '';
+                if ($mode == 'Edit') {
+                    $foto = $rows['foto'];
+                }
+            }
+        }
+
         if ($mode == 'Add') {
-            $runsql = mysqli_query($conn, "INSERT INTO resumes 
-                                                        (`title`, `subtitle`, `description`, `from_year`, `to_year`, `status`, `created_id`)
+            $runsql = mysqli_query($conn, "INSERT INTO testimonies 
+                                                        (`name`, `position`, `message`, `foto`, `status`, `created_id`)
                                                         VALUES
-                                                        ('$title','$subtitle','$description','$from_year','$to_year','$status','" . $_SESSION['userid'] . "')                                    
+                                                        ('$name','$position','$message','$foto', '$status','" . $_SESSION['userid'] . "')                                    
                                     ");
         }
         if ($mode == 'Edit') {
             $runsql = mysqli_query($conn, "
-                                    UPDATE resumes 
+                                    UPDATE testimonies 
                                     SET 
-                                    title = '" . $title . "',
-                                    subtitle = '" . $subtitle . "',
-                                    description = '" . $description . "',
-                                    from_year = '" . $from_year . "',
-                                    to_year = '" . $to_year . "', 
+                                    name = '" . $name . "',
+                                    position = '" . $position . "',
+                                    message = '" . $message . "', 
+                                    foto = '" . $foto . "', 
                                     status = '" . $status . "'
                                     where id='$tid'  
                                     ");
+        }
+
+        if ($statusfoto == 1) {
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $fillpath)) {
+                //xxx
+            }
         }
     }
 

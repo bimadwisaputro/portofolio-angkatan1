@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('../php/koneksi.php');
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['userid'])) {
     header('location:../php/logout.php');
     exit;
 }
@@ -21,7 +21,7 @@ if (isset($_GET['page'])) {
     <meta http-equiv=”Cache-Control” content=”no-cache” />
     <meta http-equiv=”Pragma” content=”no-cache” />
 
-    <title>Admin - Dashboard</title>
+    <title>Admin - Portofolio</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 

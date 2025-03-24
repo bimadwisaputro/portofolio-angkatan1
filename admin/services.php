@@ -24,7 +24,7 @@ $numdata = mysqli_num_rows($getdata);
                     <div class="card-body pb-0">
                         <?php if (!isset($_GET['form'])) { ?>
                             <div align="right" class="mt-2">
-                                <a class="btn btn-success mt-3 mb-3 float-right pull-right" href="services.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+                                <a class="btn btn-success mt-3 mb-3 float-right pull-right" href="<?= $links_path; ?>&form=add"><i class="bi bi-plus"></i> Add Data</a>
                             </div>
                             <table class="table table-striped table-bordered datatable mt-3">
                                 <thead>
@@ -60,7 +60,7 @@ $numdata = mysqli_num_rows($getdata);
                                                 </td>
                                                 <td class="text-center">
                                                     <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="services"><i class="bi bi-trash"></i></a>
-                                                    <a href="services.php?form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
+                                                    <a href="<?= $links_path; ?>&form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
                                                 </td>
                                             </tr>
                                         <?php } ?>

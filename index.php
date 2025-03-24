@@ -371,7 +371,7 @@ foreach ($rowtablearr as $rowtable) {
 					foreach ($rows['services'] as $rowservices) {
 				?>
 						<div class="col-md-6 col-lg-3">
-							<div class="media block-6 services d-block bg-white rounded-lg shadow ftco-animate" style="height:38vh;">
+							<div class="media block-6 services d-block bg-white rounded-lg shadow ftco-animate" style="height:30vh;">
 								<div class="icon shadow d-flex align-items-center justify-content-center"><span
 										class="flaticon-web-programming"></span></div>
 								<div class="media-body">
@@ -450,86 +450,30 @@ foreach ($rowtablearr as $rowtable) {
 			<div class="row ftco-animate">
 				<div class="col-md-12">
 					<div class="carousel-testimony owl-carousel">
-						<div class="item">
-							<div class="testimony-wrap py-4">
-								<div class="text">
-									<span class="fa fa-quote-left"></span>
-									<p class="mb-4 pl-5">Far far away, behind the word mountains, far from the countries
-										Vokalia and Consonantia, there live the blind texts.</p>
-									<div class="d-flex align-items-center">
-										<div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
-										<div class="pl-3">
-											<p class="name">Roger Scott</p>
-											<span class="position">Marketing Manager</span>
+
+						<?php
+						if ($num['testimonies'] > 0) {
+							foreach ($rows['testimonies'] as $rowtestimonies) {
+						?>
+								<div class="item">
+									<div class="testimony-wrap py-4" style="height:20vh;">
+										<div class="text">
+											<span class="fa fa-quote-left"></span>
+											<p class="mb-4 pl-5"><?= $rowtestimonies['message']; ?></p>
+											<div class="d-flex align-items-center">
+												<div class="user-img" style="background-image: url(<?= str_replace('../', '', $rowtestimonies['foto']); ?>)"></div>
+												<div class="pl-3">
+													<p class="name"><?= $rowtestimonies['name']; ?></p>
+													<span class="position"><?= $rowtestimonies['position']; ?></span>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="testimony-wrap py-4">
-								<div class="text">
-									<span class="fa fa-quote-left"></span>
-									<p class="mb-4 pl-5">Far far away, behind the word mountains, far from the countries
-										Vokalia and Consonantia, there live the blind texts.</p>
-									<div class="d-flex align-items-center">
-										<div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
-										<div class="pl-3">
-											<p class="name">Roger Scott</p>
-											<span class="position">Marketing Manager</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="testimony-wrap py-4">
-								<div class="text">
-									<span class="fa fa-quote-left"></span>
-									<p class="mb-4 pl-5">Far far away, behind the word mountains, far from the countries
-										Vokalia and Consonantia, there live the blind texts.</p>
-									<div class="d-flex align-items-center">
-										<div class="user-img" style="background-image: url(images/person_3.jpg)"></div>
-										<div class="pl-3">
-											<p class="name">Roger Scott</p>
-											<span class="position">Marketing Manager</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="testimony-wrap py-4">
-								<div class="text">
-									<span class="fa fa-quote-left"></span>
-									<p class="mb-4 pl-5">Far far away, behind the word mountains, far from the countries
-										Vokalia and Consonantia, there live the blind texts.</p>
-									<div class="d-flex align-items-center">
-										<div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
-										<div class="pl-3">
-											<p class="name">Roger Scott</p>
-											<span class="position">Marketing Manager</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="testimony-wrap py-4">
-								<div class="text">
-									<span class="fa fa-quote-left"></span>
-									<p class="mb-4 pl-5">Far far away, behind the word mountains, far from the countries
-										Vokalia and Consonantia, there live the blind texts.</p>
-									<div class="d-flex align-items-center">
-										<div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
-										<div class="pl-3">
-											<p class="name">Roger Scott</p>
-											<span class="position">Marketing Manager</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<?php
+							}
+						}
+						?>
 					</div>
 				</div>
 			</div>

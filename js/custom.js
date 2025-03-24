@@ -188,7 +188,7 @@ $(document).on("click", "[id^=simpan_]", function (e) {
 
   if (tipe == "contacts" || tipe == "comments") {
     var links = "php/simpan.php";
-  } else if (tipe == "resumes" || tipe == "skills" || tipe == "categories") {
+  } else if (tipe == "skills" || tipe == "categories") {
     var links = "../php/simpan.php";
   } else {
     if (document.getElementById("foto").files.length == 0) {
@@ -222,7 +222,8 @@ $(document).on("click", "[id^=simpan_]", function (e) {
         });
         setTimeout(function () {
           if (tipe != "contacts" && tipe != "comments") {
-            window.location.href = tipe + ".php"; //Will take you to Google.
+            window.location.href = "home.php?page=" + tipe + ""; //Will take you to Google.
+            // window.location.href = tipe + ".php"; //Will take you to Google.
           } else {
             location.reload(0);
           }

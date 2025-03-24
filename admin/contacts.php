@@ -48,7 +48,7 @@ $numdata = mysqli_num_rows($getdata);
                                                 <td><?= $rows['message']; ?></td>
                                                 <td><?= $rows['created_date']; ?></td>
                                                 <td class="text-center" style="width:20%;">
-                                                    <a href="contacts.php?form=edit&tid=<?= base64_encode($rows['id']); ?>" class="btn btn-success">Balas Pesan</a>
+                                                    <a href="<?= $links_path; ?>&form=edit&tid=<?= base64_encode($rows['id']); ?>" class="btn btn-success">Balas Pesan</a>
                                                     <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="contacts" class="btn btn-danger">Hapus Pesan</a>
                                                 </td>
                                             </tr>

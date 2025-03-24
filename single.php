@@ -191,7 +191,7 @@ foreach ($rowtablearr as $rowtable) {
                     <div class="meta">
                       <div><a href="#"><span class="icon-calendar"></span> <?= date_format(date_create($rowsblogs['created_date']), ' F d, Y'); ?></a></div>
                       <div><a href="#"><span class="icon-person"></span> <?= $rowsblogs['writer']; ?></a></div>
-                      <div><a href="#"><span class="icon-chat"></span> <?= $rowsblogs['totalcomment']; ?></a></div>
+                      <div><a href="#"><span class="icon-chat"></span> <?= $rowsblogs['totalcomment']; ?> <i class="fa fa-comment"></i></a></div>
                     </div>
                   </div>
                 </div>

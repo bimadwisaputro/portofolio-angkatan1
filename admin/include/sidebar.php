@@ -57,9 +57,9 @@
         </li><!-- End Login Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed sidebarleft" id="resumes" parentid="" href="?page=resumes">
+            <a class="nav-link collapsed sidebarleft" id="testimonies" parentid="" href="?page=testimonies">
                 <i class="bi bi-folder"></i>
-                <span>Resumes</span>
+                <span>Testimonies</span>
             </a>
         </li><!-- End Error 404 Page Nav -->
 

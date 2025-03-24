@@ -21,6 +21,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $_SESSION['email'] = $email;
             $_SESSION['user_level_id'] = $rows['level_id'];
             $_SESSION['username'] = $rows['username'];
+            $_SESSION['userid'] = $rows['id'];
             $_SESSION['fullname'] = $rows['fullname'];
             if (empty($rows['photoprofile']) || $rows['photoprofile'] == '' || $rows['photoprofile'] == null) {
                 $_SESSION['photoprofile'] = '../uploads/profile/noprofile.png';
