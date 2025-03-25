@@ -16,7 +16,6 @@ $numdata = mysqli_num_rows($getdata);
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
-        <?= $_SERVER['HTTP_ORIGIN']; ?>
         <?php if (!isset($_GET['form'])) { ?>
             <div class="row">
                 <div class="col-12">
