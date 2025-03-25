@@ -16,6 +16,7 @@ $numdata = mysqli_num_rows($getdata);
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
+        <?= $_SERVER['HTTP_ORIGIN']; ?>
         <?php if (!isset($_GET['form'])) { ?>
             <div class="row">
                 <div class="col-12">
@@ -23,7 +24,7 @@ $numdata = mysqli_num_rows($getdata);
                         <div class="card-body pb-0">
 
                             <div align="right" class="mt-2">
-                                <a class="btn btn-success mt-3 mb-3" href="blogs.php?form=add"><i class="bi bi-plus"></i> Add Data</a>
+                                <a class="btn btn-success mt-3 mb-3" href="<?= $links_path; ?>&form=add"><i class="bi bi-plus"></i> Add Data</a>
                             </div>
                             <table class="table table-striped table-bordered datatable mt-3">
                                 <thead>
@@ -82,7 +83,7 @@ $numdata = mysqli_num_rows($getdata);
                                                 </td>
                                                 <td class="text-center" style="width:5%;">
                                                     <a href="#" id="delete_<?= $rows['id']; ?>" tid="<?= $rows['id']; ?>" tipe="blogs"><i class="bi bi-trash"></i></a>
-                                                    <a href="blogs.php?form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
+                                                    <a href="<?= $links_path; ?>&form=edit&tid=<?= base64_encode($rows['id']); ?>"><i class="bi bi-pencil"></i></a>
                                                 </td>
                                             </tr>
                                         <?php } ?>

@@ -67,7 +67,10 @@
       if (!navbarlink.hash) return;
       let section = select(navbarlink.hash);
       if (!section) return;
-      if (position >= section.offsetTop && position <= section.offsetTop + section.offsetHeight) {
+      if (
+        position >= section.offsetTop &&
+        position <= section.offsetTop + section.offsetHeight
+      ) {
         navbarlink.classList.add("active");
       } else {
         navbarlink.classList.remove("active");
@@ -112,7 +115,9 @@
   /**
    * Initiate tooltips
    */
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
@@ -193,6 +198,49 @@
    * Initiate TinyMCE Editor
    */
 
+  const image_upload_handler_callback = (blobInfo, progress) =>
+    new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.withCredentials = false;
+      xhr.open("POST", "upload.php");
+
+      xhr.upload.onprogress = (e) => {
+        progress((e.loaded / e.total) * 100);
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 403) {
+          reject({ message: "HTTP Error: " + xhr.status, remove: true });
+          return;
+        }
+
+        if (xhr.status < 200 || xhr.status >= 300) {
+          reject("HTTP Error: " + xhr.status);
+          return;
+        }
+
+        const json = JSON.parse(xhr.responseText);
+
+        if (!json || typeof json.location != "string") {
+          reject("Invalid JSON: " + xhr.responseText);
+          return;
+        }
+
+        resolve(json.location);
+      };
+
+      xhr.onerror = () => {
+        reject(
+          "Image upload failed due to a XHR Transport error. Code: " +
+            xhr.status
+        );
+      };
+
+      const formData = new FormData();
+      formData.append("file", blobInfo.blob(), blobInfo.filename());
+      xhr.send(formData);
+    });
+
   const useDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const isSmallScreen = window.matchMedia("(max-width: 1023.5px)").matches;
 
@@ -200,79 +248,73 @@
     selector: "textarea.tinymce-editor",
     plugins:
       "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion",
-    editimage_cors_hosts: ["picsum.photos"],
-    menubar: "file edit view insert format tools table help",
+    menu: {
+      tc: {
+        title: "Comments",
+        items: "addcomment showcomments deleteallconversations",
+      },
+    },
+    menubar: "file edit view insert format tools table tc help",
     toolbar:
-      "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
+      "undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment",
+    toolbar_sticky: true,
     autosave_ask_before_unload: true,
     autosave_interval: "30s",
     autosave_prefix: "{path}{query}-{id}-",
     autosave_restore_when_empty: false,
     autosave_retention: "2m",
     image_advtab: true,
+    convert_urls: false,
+    images_upload_url: "upload.php",
+    images_upload_handler: image_upload_handler_callback,
+    images_upload_base_path: "http://localhost/portofolio/admin/uploads/files/",
     link_list: [
-      {
-        title: "My page 1",
-        value: "https://www.tiny.cloud",
-      },
-      {
-        title: "My page 2",
-        value: "http://www.moxiecode.com",
-      },
+      { title: "My page 1", value: "https://www.tiny.cloud" },
+      { title: "My page 2", value: "http://www.moxiecode.com" },
     ],
     image_list: [
-      {
-        title: "My page 1",
-        value: "https://www.tiny.cloud",
-      },
-      {
-        title: "My page 2",
-        value: "http://www.moxiecode.com",
-      },
+      { title: "My page 1", value: "https://www.tiny.cloud" },
+      { title: "My page 2", value: "http://www.moxiecode.com" },
     ],
     image_class_list: [
-      {
-        title: "None",
-        value: "",
-      },
-      {
-        title: "Some class",
-        value: "class-name",
-      },
+      { title: "None", value: "" },
+      { title: "Some class", value: "class-name" },
     ],
     importcss_append: true,
-    file_picker_callback: (callback, value, meta) => {
-      /* Provide file and text for the link dialog */
-      if (meta.filetype === "file") {
-        callback("https://www.google.com/logos/google.jpg", {
-          text: "My text",
-        });
-      }
-
-      /* Provide image and alt text for the image dialog */
-      if (meta.filetype === "image") {
-        callback("https://www.google.com/logos/google.jpg", {
-          alt: "My alt text",
-        });
-      }
-
-      /* Provide alternative source and posted for the media dialog */
-      if (meta.filetype === "media") {
-        callback("movie.mp4", {
-          source2: "alt.ogg",
-          poster: "https://www.google.com/logos/google.jpg",
-        });
-      }
-    },
+    templates: [
+      {
+        title: "New Table",
+        description: "creates a new table",
+        content:
+          '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>',
+      },
+      {
+        title: "Starting my story",
+        description: "A cure for writers block",
+        content: "Once upon a time...",
+      },
+      {
+        title: "New list with dates",
+        description: "New List with dates",
+        content:
+          '<div class="mceTmpl"><span class="cdate">cdate</span><br><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>',
+      },
+    ],
+    template_cdate_format: "[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]",
+    template_mdate_format: "[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]",
     height: 700,
     image_caption: true,
-    quickbars_selection_toolbar: "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
+    quickbars_selection_toolbar:
+      "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
     noneditable_class: "mceNonEditable",
     toolbar_mode: "sliding",
-    contextmenu: "link image table",
+    spellchecker_ignore_list: ["Ephox", "Moxiecode"],
+    tinycomments_mode: "embedded",
+    content_style: ".mymention{ color: gray; }",
+    contextmenu: "link image editimage table configurepermanentpen",
+    a11y_advanced_options: true,
     skin: useDarkMode ? "oxide-dark" : "oxide",
     content_css: useDarkMode ? "dark" : "default",
-    content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
   });
 
   /**

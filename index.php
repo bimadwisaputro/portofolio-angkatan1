@@ -456,7 +456,7 @@ foreach ($rowtablearr as $rowtable) {
 							foreach ($rows['testimonies'] as $rowtestimonies) {
 						?>
 								<div class="item">
-									<div class="testimony-wrap py-4" style="height:20vh;">
+									<div class="testimony-wrap py-4" style="height:30vh;">
 										<div class="text">
 											<span class="fa fa-quote-left"></span>
 											<p class="mb-4 pl-5"><?= $rowtestimonies['message']; ?></p>

@@ -11,6 +11,9 @@ if (isset($_GET['page'])) {
     $links_path = "home.php?page=" . $_GET['page'] . "";
     $getpage = $_GET['page'];
 }
+header("Access-Control-Allow-Origin: http://localhost/portofolio"); // Mengizinkan semua origin 
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 ?>
 <!DOCTYPE html>
 <html lang="en">
